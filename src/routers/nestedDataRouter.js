@@ -14,6 +14,67 @@ router.post("/createNestedData", async (req, res) => {
     }
 });
 
+//Updating Inner nested object of inner nested Array
+router.patch("/updateInnerArray/:id", async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const body = req.body;
+        const updateDocument = await NestedModel.findOneAndUpdate(
+            {_id:_id,'array.style.fontsize':18},
+            { $set: { "array.$.style.justifyContent.$[inner].a1": body.a1 } },
+            { arrayFilters:[{'inner.a1':"normal"}], new: true }
+        );
+        if (!updateDocument) {
+            return res.status(404).json({ message: "Document not found" });
+        }
+
+        res.json({ data: updateDocument, message: "Document updated" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+});
+
+
+// Deleting a specific inner nested object of array
+router.delete("/deleteInnerArray/:id", async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updateDocument = await NestedModel.findOneAndUpdate(
+            {_id:_id,'array.style.fontsize':18},
+            { $unset: { "array.$.style.justifyContent.$[inner].a1": 1 } },
+            { arrayFilters:[{'inner.a1':"abnormal"}], new: true }
+        );
+        if (!updateDocument) {
+            return res.status(404).json({ message: "Document not found" });
+        }
+
+        res.json({ data: updateDocument, message: "Document updated" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+});
+
+// Deleting a last inner nested object of array
+router.delete("/deleteLastElementInnerArray/:id", async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const updateDocument = await NestedModel.findOneAndUpdate(
+            {_id:_id,'array.style.fontsize':18},
+            { $pop: { "array.$.style.justifyContent":1} },
+        );
+        if (!updateDocument) {
+            return res.status(404).json({ message: "Document not found" });
+        }
+
+        res.json({ data: updateDocument, message: "Document updated" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+});
+
 //For getting all documents
 router.get("/getAllNestedData", async (req, res) => {
     try {

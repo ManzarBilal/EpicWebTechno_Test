@@ -50,7 +50,7 @@ module.exports=NestedModel;
 //             "style": {
 //                 "fontsize": 18,
 //                 "fontUnit": "px",
-//                 "justifyContent": "normal",
+//                 "justifyContent": [{"a1":"normal"},{"a2":"center"},{"a3":"start"}],
 //                 "textDecor": "none",
 //                 "color": "#000000",
 //                 "background": "#ffffff",
